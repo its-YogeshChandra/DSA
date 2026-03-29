@@ -11,6 +11,11 @@
 // Input: n = 44
 // Output: true
 // Explanation: 44 % 2 = 0, so 44 is even.
+mod multiplication;
+mod sum_of_n;
+
+use multiplication::print_table;
+use sum_of_n::sum_of_n;
 
 fn main() {
     let n = 43;
@@ -20,6 +25,12 @@ fn main() {
     } else {
         println!("the value is odd ")
     }
+
+    //call the multiplication table
+    print_table(6);
+
+    //call the sum of n
+    sum_of_n(5)
 }
 
 fn find_even_or_odd(n: &i32) -> bool {
