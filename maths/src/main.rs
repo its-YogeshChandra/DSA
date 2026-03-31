@@ -11,11 +11,14 @@
 // Input: n = 44
 // Output: true
 // Explanation: 44 % 2 = 0, so 44 is even.
+
+mod check_prime;
 mod multiplication;
 mod reverse_a_digits;
 mod sum_of_digits;
 mod sum_of_n;
 
+use check_prime::check_primality;
 use multiplication::print_table;
 use reverse_a_digits::reverse_a_digit;
 use sum_of_digits::sum_of_digits;
@@ -41,6 +44,10 @@ fn main() {
 
     //reverse_a_digit
     reverse_a_digit(456);
+
+    //check if the number is prime or not
+    let result = check_primality(23);
+    println!("{}", result);
 }
 
 fn find_even_or_odd(n: &i32) -> bool {
