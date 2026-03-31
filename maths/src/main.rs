@@ -12,10 +12,12 @@
 // Output: true
 // Explanation: 44 % 2 = 0, so 44 is even.
 mod multiplication;
+mod reverse_a_digits;
 mod sum_of_digits;
 mod sum_of_n;
 
 use multiplication::print_table;
+use reverse_a_digits::reverse_a_digit;
 use sum_of_digits::sum_of_digits;
 use sum_of_n::sum_of_n;
 
@@ -36,6 +38,9 @@ fn main() {
 
     //call the sum of digits
     sum_of_digits(345);
+
+    //reverse_a_digit
+    reverse_a_digit(456);
 }
 
 fn find_even_or_odd(n: &i32) -> bool {
