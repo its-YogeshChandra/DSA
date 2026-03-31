@@ -15,6 +15,7 @@
 mod check_prime;
 mod multiplication;
 mod reverse_a_digits;
+mod square_root;
 mod sum_of_digits;
 mod sum_of_n;
 
