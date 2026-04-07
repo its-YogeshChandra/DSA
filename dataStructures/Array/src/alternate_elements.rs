@@ -14,4 +14,32 @@
 
 pub fn alternate_elements(val: Vec<i32>) {
     //print the alternate elements
+    let mut ctr = 1;
+    for num in val {
+        if ctr % 2 != 0 {
+            println!("the value is : {}", num);
+        }
+        ctr += 1
+    }
+}
+
+pub fn alternate_elements_recursive(val: Vec<i32>) {
+    let mut ctr = 0;
+    main_recursion(val, &mut ctr);
+}
+
+pub fn main_recursion(val: Vec<i32>, ctr: &mut i32) {
+    //base condition
+    if *ctr >= val.len() as i32 {
+        return;
+    }
+
+    let main_val = val[*ctr as usize];
+
+    if *ctr % 2 == 0 {
+        println! {"the main_val is : {}", main_val }
+    };
+
+    *ctr += 1;
+    main_recursion(val, ctr);
 }
