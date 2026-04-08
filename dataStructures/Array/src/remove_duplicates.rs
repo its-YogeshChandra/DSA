@@ -17,6 +17,7 @@
 // Output: [1, 2, 3]
 // Explanation : No change as all elements are distinct.
 //
+use std::collections::HashSet;
 
 pub fn remove_duplicates(val: Vec<i32>) {
     //iterate over the array and remove the duplicate values
@@ -33,5 +34,19 @@ pub fn remove_duplicates(val: Vec<i32>) {
             }
         }
     }
+
     println!("the resultant arr is : {:?}", resultant_arr)
+}
+
+pub fn remove_duplicates_second(val: Vec<i32>) {
+    let mut resultant_set: HashSet<i32> = HashSet::new();
+
+    //iterate through the val
+    for main_val in val {
+        //check if set has the val
+        if resultant_set.contains(&main_val) == false {
+            resultant_set.insert(main_val);
+        }
+    }
+    println!("the resultant set is : {:?}", resultant_set);
 }
