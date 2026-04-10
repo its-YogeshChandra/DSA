@@ -1,4 +1,5 @@
 mod alternate_elements;
+mod duplicatewithin_k_distance;
 mod generate_subarray;
 mod leader_in_array;
 mod remove_duplicates;
@@ -6,6 +7,7 @@ mod reverse_an_array;
 
 //use crate::alternate_elements::{alternate_elements, alternate_elements_recursive};
 use crate::{leader_in_array::find_the_leader, remove_duplicates::remove_duplicates_second};
+use duplicatewithin_k_distance::duplicate_in_k_distance;
 use generate_subarray::generate_subarray;
 use remove_duplicates::remove_duplicates;
 use reverse_an_array::reverse_an_array;
@@ -25,10 +27,20 @@ fn main() {
     // remove_duplicates_second(sorted_arr.clone());
 
     //generate_subarray
-    let subarray_val = vec![1, 2, 3];
-    generate_subarray(subarray_val);
+    // let subarray_val = vec![1, 2, 3];
+    // generate_subarray(subarray_val);
+    //
+    // //reverse_an_array
+    // let mut rev_array = vec![1, 4, 3, 2, 6, 5];
+    // reverse_an_array(rev_array);
 
-    //reverse_an_array
-    let mut rev_array = vec![1, 4, 3, 2, 6, 5];
-    reverse_an_array(rev_array);
+    //k distance duplicates
+    let kdis = vec![1, 2, 3, 4, 1, 2, 3, 4];
+    let k = 4;
+    let val = duplicate_in_k_distance(kdis, k);
+    if val == true {
+        println!("true")
+    } else {
+        println!("false")
+    }
 }
