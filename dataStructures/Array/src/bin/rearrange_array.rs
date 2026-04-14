@@ -22,7 +22,7 @@
 // For i = 3, arr[i] <= arr[i-1]. So, 2 <= 3.
 //
 
-fn rearrange_array(mut val: Vec<i32>) {
+fn rearrange_array(mut val: Vec<i32>) -> Vec<i32> {
     //use 1 based indexing
     //the values at even postions should be greater then that on the odd poistions
     let mut index = 1;
@@ -46,6 +46,7 @@ fn rearrange_array(mut val: Vec<i32>) {
     }
 
     println!("the val is : {:#?}", val);
+    val
 }
 
 fn main() {
