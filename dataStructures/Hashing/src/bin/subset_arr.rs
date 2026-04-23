@@ -28,20 +28,38 @@ fn main() {
 
 fn subset_of_array(arr1: Vec<i32>, arr2: Vec<i32>) -> bool {
     //check if the  val of the b exist in the val of the another
-    let modulo = arr1.len() - 1;
-    let mut hash_arr: Vec<i32> = vec![];
+    let modulo = arr1.len() * 2;
+    let mut hash_arr: Vec<Option<i32>> = vec![None; modulo];
 
     //loop to has the arr1
     for val in arr1 {
         //use the liner probing
-        let xmod = val % modulo as i32;
+        let mut xmod = val % modulo as i32;
+        println!("the value of the hasharr is  : {:?}", hash_arr);
 
-        hash_arr[xmod as usize] = val;
+        while hash_arr[xmod as usize].is_some() {
+            xmod = (xmod + 1) % modulo as i32
+        }
+
+        hash_arr[xmod as usize] = Some(val);
     }
 
-    //loop through second array and check if has_arr contains the val
+    //loop through second array and check if has_arr didn't contains the val
     for val in arr2 {
-        if !hash_arr.contains(&val) {
+        let mut xmod = val % modulo as i32;
+        let mut result = false;
+
+        while hash_arr[xmod as usize].is_some() {
+            //check if there is the value
+            if hash_arr[xmod as usize] == Some(val) {
+                result = true;
+                break;
+            }
+
+            xmod = (xmod + 1) % modulo as i32
+        }
+
+        if result == false {
             return false;
         }
     }
