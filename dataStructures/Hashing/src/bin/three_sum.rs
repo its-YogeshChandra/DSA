@@ -14,11 +14,25 @@
 // Output: 0
 // Explanation: There is no triplet whose sum is equal to 1.
 
+use std::collections::HashSet;
+
 fn main() {
     let arr = vec![0, -1, 2, -3, 1];
-    count_triplets(arr);
+    let target = -2 as i32;
+    count_triplets(arr, target);
 }
 
-fn count_triplets(arr: Vec<i32>) {
+fn count_triplets(arr: Vec<i32>, target: i32) {
+    //its a two way function
+    let mut cnt = 0;
 
+    for i in 0..(arr.len() - 2) {
+        let int_target = target - arr[i];
+    }
+}
+
+fn get_triplet_count(arr: Vec<i32>, idx: usize, target: i32) {
+    let mut freq: HashSet<i32> = HashSet::new();
+
+    for i in idx..arr.len() {}
 }
