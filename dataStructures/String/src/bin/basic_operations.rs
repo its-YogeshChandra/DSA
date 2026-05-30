@@ -27,8 +27,18 @@ fn main() {
     let the_string = "Geeks";
     let ch = "askin";
     let pos = 3 as usize;
-}
+    let in_res = insert_in_location(pos, ch, the_string);
+    println!("inserted string is : {}", in_res);
 
+    //remove all occurences of a character from string
+    println!("-----");
+    println!("remove all occurences");
+    println!("-----");
+    let the_string = "AskinNakLeVAR".to_string();
+    let ch = "a";
+    let in_res = remove_element(the_string, ch);
+    println!("string after character : {}", in_res);
+}
 //find the length
 fn find_len(val: &str) -> usize {
     //return the length
@@ -49,9 +59,16 @@ fn check_presence(ch: &str, str_val: &str) -> i32 {
 }
 
 //insert in a location
-fn insert_in_location<'a>(pos: usize, ch: &str, main_str: &mut str) -> &'a str {
+fn insert_in_location(pos: usize, ch: &str, main_str: &str) -> String {
     let mut new_str = String::new();
     main_str.clone_into(&mut new_str);
     new_str.insert_str(pos, ch);
-    &new_str
+    new_str
+}
+
+//remove all elements from the string
+pub fn remove_element(mut main_str: String, ch: &str) -> String {
+    let new_char: char = ch.parse().unwrap();
+    main_str.retain(|c| c != new_char);
+    main_str
 }
