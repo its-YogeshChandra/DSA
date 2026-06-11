@@ -13,9 +13,11 @@
 // Explanation: s is not a palindromen
 
 fn main() {
-    let str = "abc";
+    let str = "abba";
     let result = check_palindrome(str);
-    println!("the result is : {}", result)
+    let opt_result = check_palindrome_optimal(str);
+    println!("the result is : {}", result);
+    println!("the opt result is : {}", opt_result)
 }
 
 //using two pointers
@@ -31,5 +33,17 @@ fn check_palindrome(main_str: &str) -> bool {
         i += 1;
         j -= 1;
     }
+    true
+}
+
+fn check_palindrome_optimal(main_str: &str) -> bool {
+    let mut chars = main_str.chars();
+
+    while let (Some(first), Some(last)) = (chars.next(), chars.next_back()) {
+        if first != last {
+            return false;
+        }
+    }
+
     true
 }
