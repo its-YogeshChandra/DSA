@@ -19,9 +19,12 @@ fn main() {
     let s1 = "AXY";
     let s2 = "YADXCP";
     let result = check_subseq(s1, s2);
-    println!("the result is : {}", result)
+    println!("the result is : {}", result);
+    let opt_result = check_subseq_optimal(s1, s2);
+    println!("the optimal result is : {}", opt_result)
 }
 
+//ook with flaw ( of not taking care of duplicate elements )
 fn check_subseq(s1: &str, s2: &str) -> bool {
     let mut index = 0;
     for char in s1.chars() {
@@ -42,4 +45,11 @@ fn check_subseq(s1: &str, s2: &str) -> bool {
     }
 
     true
+}
+
+//optimal approach for the problem
+fn check_subseq_optimal(s1: &str, s2: &str) -> bool {
+    let mut s2_iterator = s2.chars();
+
+    s1.chars().all(|w| s2_iterator.any(|s2_char| s2_char == w))
 }
