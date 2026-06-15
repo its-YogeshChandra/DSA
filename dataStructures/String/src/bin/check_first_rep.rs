@@ -12,48 +12,56 @@
 // Output: l
 // Explanation: l is the first element that repeats
 
+use std::collections::HashSet;
+
 fn main() {
-    let s = "hello geeks";
+    let s = "mercenary";
     let result = first_repitition(s);
+    let opt_result = opt_check_first_rep(s);
     println!("the result is : {}", result);
+    println!("the opt_result is : {}", opt_result);
 }
 
+//kind a optimal + brute force (may be leaving some edge cases)
 fn first_repitition(main_str: &str) -> char {
-    let mut result: (usize, char, bool) = (0, '_', false);
+    let mut result: (usize, char, bool) = (usize::MAX, '_', false);
 
-    let mut i = 0;
-    let mut j = 1;
+    // Convert to a Vec<char> so we can index it instantly with [i] instead of using .nth()
+    let chars: Vec<char> = main_str.chars().collect();
+    let len = chars.len();
 
-    while i < (main_str.len() - 1) {
-        if main_str.chars().nth(i).unwrap() == main_str.chars().nth(j).unwrap() {
-            //check the difference
-            let diff = j - i;
-
-            //if diff i 1 then return the value immediately
-            if diff == 1 {
-                return main_str.chars().nth(i).unwrap();
-            }
-
-            //if diff is greater then
-            if diff < result.0 {
-                //update the result values
-                result.0 = diff;
-                result.1 = main_str.chars().nth(i).unwrap();
-                result.2 = true;
-
-                i += 1;
-                j = i + 1;
+    // Brute-force nested loops to check every pair
+    for i in 0..len {
+        for j in (i + 1)..len {
+            if chars[i] == chars[j] {
+                // The problem wants the smallest SECOND occurrence index (which is j)
+                if j < result.0 {
+                    result.0 = j;
+                    result.1 = chars[i];
+                    result.2 = true;
+                }
             }
         }
-
-        i += 1;
-        j = i + 1;
     }
 
-    if result.2 == false {
+    if !result.2 {
         println!("no element found");
         return ' ';
     } else {
         result.1
     }
+}
+
+//optimal approach to the function
+fn opt_check_first_rep(main_str: &str) -> char {
+    let mut seen: HashSet<char> = HashSet::new();
+
+    for char in main_str.chars() {
+        if !seen.insert(char) {
+            return char;
+        }
+    }
+
+    println!("no repitition found");
+    ' '
 }
