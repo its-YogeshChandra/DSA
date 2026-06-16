@@ -26,7 +26,6 @@ fn main() {
 fn first_repitition(main_str: &str) -> char {
     let mut result: (usize, char, bool) = (usize::MAX, '_', false);
 
-    // Convert to a Vec<char> so we can index it instantly with [i] instead of using .nth()
     let chars: Vec<char> = main_str.chars().collect();
     let len = chars.len();
 
