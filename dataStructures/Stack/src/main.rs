@@ -20,7 +20,7 @@ pub enum PopResult {
 
 impl<T: std::cmp::PartialEq + Copy> Stack<T> {
     //for new functions
-    fn new(capacity: usize) -> Self {
+    pub fn new(capacity: usize) -> Self {
         Self {
             storage: Vec::with_capacity(capacity),
             capacity,
@@ -29,7 +29,7 @@ impl<T: std::cmp::PartialEq + Copy> Stack<T> {
     }
 
     //put element in the stack
-    fn push(&mut self, data: T) -> bool {
+    pub fn push(&mut self, data: T) -> bool {
         // 1.MANUAL CHECK : Enforce the strict capacity limit before pushing
         if self.storage.len() >= self.capacity {
             println!("Stack overflow");
@@ -47,7 +47,7 @@ impl<T: std::cmp::PartialEq + Copy> Stack<T> {
     }
 
     //get element from the stack
-    fn pop(&mut self) -> T {
+    pub fn pop(&mut self) -> T {
         match self.storage.pop() {
             Some(value) => {
                 //update the top
