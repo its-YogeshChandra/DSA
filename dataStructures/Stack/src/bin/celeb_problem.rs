@@ -88,22 +88,56 @@ impl<T: std::cmp::PartialEq + Copy> Stack<T> {
     }
 }
 
-fn check_celeb() {
-    //create the checklist
-    let mut register_matrix: Vec<Stack<i32>> = vec![];
+fn check_celeb() -> i32 {
+    let matrix_maker = vec![[1, 1, 0], [0, 1, 0], [0, 1, 1]];
 
-    //checking to the thing
-    for val in vec![[1, 1, 0], [0, 1, 0], [0, 1, 1]] {
-        let mut stack: Stack<i32> = Stack::new(val.len());
-        for need_val in val {
-            stack.push(need_val);
+    let matrix_maker = vec![[1, 1], [1, 1]];
+    let mut row_data: Option<usize> = None;
+
+    for (row_index, iter_val) in matrix_maker.as_slice().iter().enumerate() {
+        let mut count_in_row = 0;
+        for (index, main_val) in iter_val.iter().enumerate() {
+            if count_in_row == 0 && *main_val == 1 {
+                count_in_row += 1;
+            } else if count_in_row == 1 && *main_val == 1 {
+                break;
+            }
+
+            if index == iter_val.len() - 1 && count_in_row == 1 {
+                row_data = Some(row_index);
+            }
         }
-        register_matrix.push(stack);
     }
 
-    println!("register matrix : {:?}", register_matrix)
+    match row_data {
+        Some(val) => {
+            println!("the index value is : {}", val);
+            let col_index = val; // FIXED: Removed "- 1"
+            let mut col_val_count = 0;
+            let total_rows = matrix_maker.len();
+
+            for iter_val in matrix_maker.iter() {
+                println!("the iter_val is : {}", iter_val[col_index]);
+                if iter_val[col_index] == 1 {
+                    col_val_count += 1;
+                }
+            }
+
+            if col_val_count == total_rows {
+                println!("is here");
+                return val as i32;
+            } else {
+                println!("returning from else");
+                -1
+            }
+        }
+        None => {
+            return -1;
+        }
+    }
 }
 
 fn main() {
-    check_celeb();
+    let res = check_celeb();
+    println!("the response is :{}", res)
 }
