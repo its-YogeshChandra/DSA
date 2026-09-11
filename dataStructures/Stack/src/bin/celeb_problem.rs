@@ -137,6 +137,7 @@ fn check_celeb() -> i32 {
     }
 }
 
+//the main function
 fn main() {
     let res = check_celeb();
     println!("the response is :{}", res)
