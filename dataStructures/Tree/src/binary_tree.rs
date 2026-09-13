@@ -1,8 +1,4 @@
-//Trees
-//implementation of the tree
-mod binary_tree;
-use core::panic;
-//parent child relationship
+//binary tree in rust
 
 #[derive(Debug)]
 struct Node<T: std::fmt::Display> {
@@ -10,13 +6,14 @@ struct Node<T: std::fmt::Display> {
     parent: Option<usize>,
     children: Vec<usize>,
 }
+
 #[derive(Debug)]
-struct Tree<T: std::fmt::Display> {
+struct Binary_Tree<T: std::fmt::Display> {
     nodes: Vec<Node<T>>,
     root: Option<usize>,
 }
 
-impl<T: std::fmt::Display> Tree<T> {
+impl<T: std::fmt::Display> Binary_Tree<T> {
     pub fn new() -> Self {
         Self {
             nodes: Vec::new(),
@@ -25,8 +22,6 @@ impl<T: std::fmt::Display> Tree<T> {
     }
 
     pub fn create_root(&mut self, data: T) {
-        // TODO: !check so that multiple roots can't be created
-
         if let Some(root_index) = self.root {
             //don't create the value
             panic!("root already exists")
@@ -49,6 +44,13 @@ impl<T: std::fmt::Display> Tree<T> {
         if parent_index >= self.nodes.len() {
             panic!("index overflow: reason parent index")
         }
+
+        //binary tree parent node shouldn't have more then two chilren node
+        let parent_length = self.nodes[parent_index].children.len();
+        if parent_length >= 2 as usize {
+            panic!["can add more value to the tree"]
+        }
+
         let node = Node {
             data,
             parent: Some(parent_index),
@@ -62,25 +64,4 @@ impl<T: std::fmt::Display> Tree<T> {
         //update the parent node
         self.nodes[parent_index].children.push(child_index);
     }
-}
-
-fn tree_operations() {
-    //call teh create root function
-    let mut tree_storage: Tree<i32> = Tree::new();
-
-    //create root
-    tree_storage.create_root(10);
-    println!("tree is : {:#?}", tree_storage);
-
-    //add the chidren to the tree tree_operations
-    for idx in 0..6 {
-        tree_storage.create_child(23, idx as usize);
-    }
-
-    println!("tree is : {:#?}", tree_storage);
-}
-
-fn main() {
-    //call the function
-    tree_operations();
 }
