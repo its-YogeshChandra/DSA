@@ -30,6 +30,8 @@
 // pop1() the popped element will be 3
 // pop1() the stack1 is now empty hence returned -1
 
+use core::panic;
+
 #[derive(Debug)]
 struct TwoStacks<T: Copy + std::fmt::Display> {
     storage: Vec<Option<T>>,
@@ -87,10 +89,6 @@ impl<T: Copy + std::cmp::PartialEq + std::fmt::Display + std::fmt::Debug> TwoSta
             }
         }
 
-        if self.storage.contains(&Some(data)) == true {
-            return true;
-        }
-
         false
     }
 
@@ -128,23 +126,79 @@ impl<T: Copy + std::cmp::PartialEq + std::fmt::Display + std::fmt::Debug> TwoSta
             }
         }
 
-        if self.storage.contains(&Some(data)) == true {
-            return true;
-        }
-
         false
     }
 
-    fn pop_through_1(&mut self) {
-        //self.storage.pop()
+    fn pop_through_1(&mut self) -> Option<T> {
+        //take the element from the left field index
+        let storage = &mut self.storage;
+        let getting_index = match self.left_filled_index {
+            Some(index) => index,
+            None => {
+                panic!("left stack is empty")
+            }
+        };
+
+        match storage.get(getting_index) {
+            Some(val) => match val {
+                Some(val) => {
+                    let resp = val.clone();
+                    storage[getting_index] = None;
+
+                    println!("getting left index is : {}", getting_index);
+
+                    //update the left filled index
+                    if getting_index != 0 {
+                        self.left_filled_index = Some(getting_index - 1);
+                    }
+
+                    Some(resp)
+                }
+                None => panic!("nothing to pop"),
+            },
+
+            None => {
+                panic! {"nothing to pop"};
+            }
+        }
     }
 
-    fn pop_through_2(&mut self, data: T) {
-        //self.storage.pop()
+    fn pop_through_2(&mut self) -> Option<T> {
+        //take the element from the left field index
+        let storage = &mut self.storage;
+        let getting_index = match self.right_filled_index {
+            Some(index) => index,
+            None => {
+                panic!("right stack is empty")
+            }
+        };
+
+        match storage.get(getting_index) {
+            Some(val) => match val {
+                Some(val) => {
+                    let resp = val.clone();
+                    storage[getting_index] = None;
+
+                    println!("getting left index is : {}", getting_index);
+
+                    //update the left filled index
+                    if getting_index != self.right_start_index {
+                        self.right_filled_index = Some(getting_index + 1);
+                    }
+
+                    Some(resp)
+                }
+                None => panic!("nothing to pop"),
+            },
+
+            None => {
+                panic! {"nothing to pop"};
+            }
+        }
     }
 }
 
-fn twoStack_operations() {
+fn twostack_operations() {
     let mut global_storage: TwoStacks<u32> = TwoStacks::create_store(8);
 
     println!("global storage before push : {:#?}", global_storage);
@@ -162,8 +216,25 @@ fn twoStack_operations() {
     println!("--------------------------");
     println!("global storage after push : {:?}", global_storage);
     println!("--------------------------");
+
+    for _ in 0..5 {
+        let resp = global_storage.pop_through_1();
+        if let Some(val) = resp {
+            println!("the value of left pop is : {}", val)
+        };
+    }
+    for _ in 0..3 {
+        let resp = global_storage.pop_through_2();
+        if let Some(val) = resp {
+            println!("the value of right pop is : {}", val)
+        };
+    }
+
+    println!("--------------------------");
+    println!("global storage after pop: {:?}", global_storage);
+    println!("--------------------------");
 }
 
 fn main() {
-    twoStack_operations();
+    twostack_operations();
 }
