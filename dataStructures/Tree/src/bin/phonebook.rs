@@ -8,7 +8,8 @@ use std::{cmp::Ordering, path::is_separator};
 struct Node {
     data: String,
     parent_index: Option<usize>,
-    children: Vec<usize>,
+    left_child: Option<usize>,
+    right_child: Option<usize>,
 }
 
 #[derive(Debug)]
@@ -67,8 +68,10 @@ impl Phonebook {
             let node = Node {
                 data,
                 parent_index: None,
-                children: vec![0, 0],
+                right_child: None,
+                left_child: None,
             };
+
             let root_index = self.nodes.iter().len();
 
             //update the val in nodes
@@ -87,54 +90,61 @@ impl Phonebook {
     fn add_numbers(&mut self, data: String) -> bool {
         // TODO: add the check for the root existence
 
-        //compare nodeval string with the data string
-        match self.nodes[self.filing_index].data.cmp(&data) {
-            Ordering::Less => {
-                //add the value to the node
-                let node = Node {
-                    data,
-                    parent_index: Some(self.filing_index),
-                    children: vec![0, 0],
-                };
-                let child_index = self.nodes.len();
+        let mut current_idx = 0 as usize;
 
-                self.nodes.push(node);
-                //update this in the parent node
-                self.nodes[self.filing_index].children[0] = child_index;
+        loop {
+            //compare nodeval string with the data string
+            match self.nodes[current_idx].data.cmp(&data) {
+                Ordering::Less => {
+                    //add the value to the node
+                    if let Some(val) = self.nodes[current_idx].right_child {
+                        //update the current_idx to the indx we get
+                        current_idx = val;
+                    } else {
+                        let node = Node {
+                            data: data.clone(),
+                            parent_index: Some(current_idx),
+                            left_child: None,
+                            right_child: None,
+                        };
 
-                //update the filled index value, if chiild number reached two or more
-                if self.nodes[self.filing_index].children.len() >= 2 {
-                    self.filing_index += 1;
+                        //upddate those value
+                        let child_index = self.nodes.len();
+                        self.nodes.push(node);
+                        //update this in the parent node
+
+                        self.nodes[current_idx].right_child = Some(child_index);
+                        break true;
+                    }
                 }
-                true
-            }
+                Ordering::Greater => {
+                    //add the value to the node
+                    if let Some(val) = self.nodes[current_idx].left_child {
+                        //update the current_idx to the indx we get
+                        current_idx = val;
+                    } else {
+                        let node = Node {
+                            data: data.clone(),
+                            parent_index: Some(current_idx),
+                            left_child: None,
+                            right_child: None,
+                        };
 
-            Ordering::Greater => {
-                //add the value to the node
-                let node = Node {
-                    data,
-                    parent_index: Some(self.filing_index),
-                    children: vec![0, 0],
-                };
-                let child_index = self.nodes.len();
+                        //upddate those value
+                        let child_index = self.nodes.len();
+                        self.nodes.push(node);
+                        //update this in the parent node
 
-                self.nodes.push(node);
-                //update this in the parent node
+                        self.nodes[current_idx].left_child = Some(child_index);
 
-                self.nodes[self.filing_index].children[1] = child_index;
-
-                //update the filled index value, if chiild number reached two or more
-                if self.nodes[self.filing_index].children.len() >= 2 {
-                    self.filing_index += 1;
+                        break true;
+                    }
                 }
 
-                true
-                //add the value to the node
-            }
-
-            Ordering::Equal => {
-                println!("value already exists");
-                return false;
+                Ordering::Equal => {
+                    println!("value already exists");
+                    break false;
+                }
             }
         }
     }
@@ -156,8 +166,8 @@ fn phonebook_operations() {
     println!("the phonebook is : {:#?}", phonebook);
 
     let names = [
-        "Alice", "Brian", "Chloe", "David", "Emma", "Felix", "Grace", "Henry", "Isla", "Jack",
-        "Kevin", "Liam", "Mia", "Noah", "Olivia", "Peter", "Quinn", "Rachel", "Sam", "Arthur",
+        "Brian", "Chloe", "David", "Emma", "Felix", "Grace", "Henry", "Isla", "Jack", "Kevin",
+        "Liam", "Mia", "Noah", "Olivia", "Peter", "Quinn", "Rachel", "Sam", "Abott",
     ];
 
     for name in names {
