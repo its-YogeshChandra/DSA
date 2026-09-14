@@ -2,7 +2,7 @@
 //left and right in vector: traversal is from left to right
 //so first value is the left val and second val is the right val
 
-use std::cmp::Ordering;
+use std::{cmp::Ordering, path::is_separator};
 
 #[derive(Debug)]
 struct Node {
@@ -45,13 +45,13 @@ impl Phonebook {
             println!("root already exist");
             return false;
         }
+
         //check if the given value is the A
         let char_val = data.chars().next();
-        let new_ascii_val = match char_val {
+        let is_ascii = match char_val {
             Some(val) => {
                 if val.is_ascii() {
-                    let ascii_val = val as u8;
-                    ascii_val
+                    true
                 } else {
                     return false;
                 }
@@ -62,7 +62,7 @@ impl Phonebook {
         };
 
         //the value of the ascii should be 65
-        if new_ascii_val == 65 {
+        if is_ascii {
             //add the string to the root
             let node = Node {
                 data,
@@ -78,6 +78,7 @@ impl Phonebook {
             true
         } else {
             //can't create root
+            println!("val is not a correct ascii value");
             return false;
         }
     }
