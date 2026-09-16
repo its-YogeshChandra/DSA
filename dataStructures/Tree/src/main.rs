@@ -1,6 +1,7 @@
 //Trees
 //implementation of the tree
 mod binary_tree;
+mod utils;
 use core::panic;
 //parent child relationship
 

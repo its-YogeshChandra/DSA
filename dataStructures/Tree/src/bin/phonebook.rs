@@ -1,12 +1,23 @@
 //goal : create phonebook using binary search tree
 //left and right in vector: traversal is from left to right
 //so first value is the left val and second val is the right val
+#[path = "../utils.rs"]
+mod utils;
+use core::panic;
+use std::cmp::Ordering;
+use std::sync::{Mutex, OnceLock};
+use std::time::{Duration, Instant};
+use utils::generate_random_name_and_number;
 
-use std::{cmp::Ordering, path::is_separator};
+#[derive(Debug)]
+struct PhoneData {
+    name: String,
+    call: u64,
+}
 
 #[derive(Debug)]
 struct Node {
-    data: String,
+    data: PhoneData,
     parent_index: Option<usize>,
     left_child: Option<usize>,
     right_child: Option<usize>,
@@ -16,8 +27,15 @@ struct Node {
 struct Phonebook {
     nodes: Vec<Node>,
     root: Option<usize>,
-    filing_index: usize,
+    find_time_counter: Option<usize>,
 }
+
+static PHONEBOOK_STORE: OnceLock<Mutex<Phonebook>> = OnceLock::new();
+
+fn phonebook_store() -> &'static Mutex<Phonebook> {
+    PHONEBOOK_STORE.get_or_init(|| Mutex::new(Phonebook::create()))
+}
+
 impl std::fmt::Display for Phonebook {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Use the write! macro to format the output.
@@ -31,7 +49,7 @@ impl Phonebook {
         Self {
             nodes: Vec::new(),
             root: None,
-            filing_index: 0 as usize,
+            find_time_counter: None,
         }
     }
 
@@ -39,7 +57,7 @@ impl Phonebook {
     //TODO: root either be the first letter which is a
     //TODO: root either be any letter
 
-    fn create_root(&mut self, data: String) -> bool {
+    fn create_root(&mut self, data: PhoneData) -> bool {
         //check if root already exist
         if let Some(idx) = self.root {
             //throw error
@@ -48,7 +66,7 @@ impl Phonebook {
         }
 
         //check if the given value is the A
-        let char_val = data.chars().next();
+        let char_val = data.name.chars().next();
         let is_ascii = match char_val {
             Some(val) => {
                 if val.is_ascii() {
@@ -87,14 +105,22 @@ impl Phonebook {
     }
 
     //this function decides itself who gonna be parent and
-    fn add_numbers(&mut self, data: String) -> bool {
-        // TODO: add the check for the root existence
+    fn add_numbers(&mut self, data: PhoneData) -> bool {
+        // TODO: add the check for the root existencextern crate ;
 
+        match self.root {
+            Some(val) => {}
+            None => {
+                println!("root doesn't exists");
+                return false;
+            }
+        }
         let mut current_idx = 0 as usize;
+        let mut equal_val_counter = 0 as usize;
 
         loop {
             //compare nodeval string with the data string
-            match self.nodes[current_idx].data.cmp(&data) {
+            match self.nodes[current_idx].data.name.cmp(&data.name) {
                 Ordering::Less => {
                     //add the value to the node
                     if let Some(val) = self.nodes[current_idx].right_child {
@@ -102,7 +128,7 @@ impl Phonebook {
                         current_idx = val;
                     } else {
                         let node = Node {
-                            data: data.clone(),
+                            data: data,
                             parent_index: Some(current_idx),
                             left_child: None,
                             right_child: None,
@@ -124,7 +150,7 @@ impl Phonebook {
                         current_idx = val;
                     } else {
                         let node = Node {
-                            data: data.clone(),
+                            data: data,
                             parent_index: Some(current_idx),
                             left_child: None,
                             right_child: None,
@@ -142,39 +168,129 @@ impl Phonebook {
                 }
 
                 Ordering::Equal => {
-                    println!("value already exists");
+                    equal_val_counter += 1;
+                    println!("the equal_val_counter is  {}", equal_val_counter);
                     break false;
+                }
+            }
+        }
+    }
+
+    fn find_numbers(&mut self, data: String) -> Option<u64> {
+        // TODO: add the check for the root existence
+        match self.root {
+            Some(_) => {}
+            None => {
+                println!("root doesn't exists");
+                return None;
+            }
+        }
+        let start_time = Instant::now();
+        let mut current_idx = 0 as usize;
+
+        loop {
+            //compare nodeval string with the data string
+            match self.nodes[current_idx].data.name.cmp(&data) {
+                Ordering::Less => {
+                    //add the value to the node
+                    if let Some(val) = self.nodes[current_idx].right_child {
+                        current_idx = val;
+                        self.find_time_counter = Some(self.find_time_counter.unwrap_or(0) + 1);
+                    } else {
+                        break None;
+                    }
+                }
+                Ordering::Greater => {
+                    //add the value to the node
+                    if let Some(val) = self.nodes[current_idx].left_child {
+                        //does right child is equal to the string
+                        current_idx = val;
+                        self.find_time_counter = Some(self.find_time_counter.unwrap_or(0) + 1);
+                    } else {
+                        break None;
+                    }
+                }
+
+                Ordering::Equal => {
+                    let result = self.nodes[current_idx].data.call;
+                    let duration = start_time.elapsed();
+                    println!("time taken : {:#?}", duration);
+
+                    if let Some(counter) = self.find_time_counter {
+                        println!("counts taken : {}", counter)
+                    }
+
+                    break Some(result);
                 }
             }
         }
     }
 }
 
+fn create_root(data: PhoneData) -> bool {
+    phonebook_store().lock().unwrap().create_root(data)
+}
+
+fn add_numbers(data: PhoneData) -> bool {
+    phonebook_store().lock().unwrap().add_numbers(data)
+}
+
+fn find_numbers(name: String) -> Option<u64> {
+    phonebook_store().lock().unwrap().find_numbers(name)
+}
+
 fn phonebook_operations() {
-    let root_vec = ["Alice", "Aaron", "Arthur"];
-    let mut phonebook = Phonebook::create();
+    let root_vec = [("Alice", "75708704233")];
 
     //udpate the phonebook
     for val in root_vec {
-        let is_root = phonebook.create_root(val.to_string());
+        let number: u64 = val.1.parse().unwrap();
+        let phone_data = PhoneData {
+            name: val.0.to_string(),
+            call: number,
+        };
+        let is_root = create_root(phone_data);
         if is_root == true {
             println!("root found");
             break;
         }
     }
 
-    println!("the phonebook is : {:#?}", phonebook);
+    println!(
+        "the phonebook is : {:#?}",
+        phonebook_store().lock().unwrap()
+    );
 
-    let names = [
-        "Brian", "Chloe", "David", "Emma", "Felix", "Grace", "Henry", "Isla", "Jack", "Kevin",
-        "Liam", "Mia", "Noah", "Olivia", "Peter", "Quinn", "Rachel", "Sam", "Abott",
-    ];
+    for _ in 0..1000000 {
+        let (name, number_val) = generate_random_name_and_number();
+        let phone_data = PhoneData {
+            name,
+            call: number_val,
+        };
 
-    for name in names {
-        phonebook.add_numbers(name.to_string());
+        //create the val
+        let _ = add_numbers(phone_data);
     }
 
-    println!("the phonebook after updating number : {}", phonebook);
+    println!(
+        "the phonebook after adding numbers : {:#?}",
+        phonebook_store().lock().unwrap()
+    );
+
+    fn find_operation() {
+        let find_string_vec = ["NPy43tUF8-DmCNs7", "NktmDwTIW03tIOy_", "NlkghAlr5K5AB4-E"];
+        match find_numbers(find_string_vec[1].to_string()) {
+            Some(val) => {
+                println!("the number is : {}", val);
+            }
+            None => {
+                panic!("number not found in the phonebook")
+            }
+        };
+    }
+
+    std::thread::sleep(Duration::from_secs(7));
+    find_operation()
 }
 fn main() {
     phonebook_operations();
