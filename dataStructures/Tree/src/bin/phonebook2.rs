@@ -265,6 +265,11 @@ impl Phonebook {
                 self.nodes[p_index].height = main_height;
 
                 //leave balance factor for now
+                let bal_factor = left_child_height - right_child_height;
+
+                if bal_factor > 1 {}
+
+                if bal_factor < -1 {}
 
                 //update the check index
                 check_index = p_index;
